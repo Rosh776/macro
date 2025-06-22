@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macro World</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #262626;
+            --primary-color: #8e44ad;
+            --secondary-color: #8e8e8e;
+            --border-color: #dbdbdb;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --like-color: #ed4956;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a2e;
+            --text-color: #f0f0f0;
+            --primary-color: #9b59b6;
+            --secondary-color: #a8a8a8;
+            --border-color: #363636;
+            --card-bg: #252547;
+            --header-bg: #1a1a2e;
+            --like-color: #ff6b81;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        .header-container {
+            max-width: 975px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #8e44ad, #3498db, #2ecc71, #f1c40f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite;
+            background-size: 300% 300%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .nav-icons a {
+            color: var(--text-color);
+            font-size: 22px;
+            text-decoration: none;
+        }
+
+        .profile-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .profile-btn:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
+            animation: neonGlow 1.5s infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from {
+                box-shadow: 0 0 5px var(--primary-color);
+            }
+            to {
+                box-shadow: 0 0 15px var(--primary-color);
+            }
+        }
+
+        .profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 935px;
+            margin: 90px auto 30px;
+            padding: 0 20px;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: flex;
+            margin-bottom: 44px;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(142, 68, 173, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .profile-pic:hover {
+            box-shadow: 0 0 25px var(--primary-color);
+            animation: neonGlow 1.5s infinite alternate;
+        }
+
+        .profile-pic-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 0 15px;
+        }
+
+        .profile-pic:hover .profile-pic-nav {
+            opacity: 1;
+        }
+
+        .profile-pic-nav-btn {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .profile-pic-nav-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-bio h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #8e44ad, #3498db, #2ecc71, #f1c40f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite;
+            background-size: 300% 300%;
+        }
+
+        .profile-bio p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: var(--secondary-color);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .item-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .item-actions {
+            opacity: 1;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .like-btn.liked {
+            color: var(--like-color);
+            animation: heartBeat 0.5s;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .item-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            color: white;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .item-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image Viewer */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .viewer-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .viewer-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-caption {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .prev-button {
+            left: 20px;
+        }
+
+        .next-button {
+            right: 20px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8e44ad, #3498db, #2ecc71, #f1c40f);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(142, 68, 173, 0.4);
+            z-index: 100;
+            border: none;
+            transition: all 0.3s ease;
+            animation: float 6s ease-in-out infinite, gradientBG 8s ease infinite;
+            background-size: 300% 300%;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 8px 30px rgba(142, 68, 173, 0.6);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            grid-column: 1 / -1;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(142, 68, 173, 0.1);
+            border-radius: 50%;
+            border-top-color: #8e44ad;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--header-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            z-index: 90;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .footer-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .footer-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-pic {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .header-stats {
+                gap: 15px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .header-container {
+                padding: 0 10px;
+            }
+
+            .footer-nav {
+                gap: 15px;
+                padding: 10px 0;
+            }
+
+            .footer-nav-btn {
+                font-size: 18px;
+                padding: 5px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-icons {
+                gap: 15px;
+            }
+
+            .profile-pic {
+                width: 100px;
+                height: 100px;
+            }
+
+            .header-stats {
+                gap: 10px;
+            }
+
+            .stat-value {
+                font-size: 14px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .footer-nav {
+                gap: 10px;
+                padding: 8px 0;
+            }
+
+            .footer-nav-btn {
+                font-size: 16px;
+                padding: 3px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="mainHeader">
+        <div class="header-container">
+            <div class="logo">Macro World</div>
+            
+            <div class="header-stats">
+                <div class="stat" id="postsStat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">posts</div>
+                </div>
+                <div class="stat" id="followersStat">
+                    <div class="stat-value">1.2k</div>
+                    <div class="stat-label">followers</div>
+                </div>
+                <div class="stat" id="followingStat">
+                    <div class="stat-value">345</div>
+                    <div class="stat-label">following</div>
+                </div>
+            </div>
+            
+            <div class="nav-icons">
+                <a href="#" class="like-icon"><i class="far fa-heart"></i></a>
+                <a href="https://rosh776.github.io/Home/" class="profile-btn" id="profileLink">
+                    <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="Profile">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <div class="profile-pic-container">
+                <img src="" alt="Random Macro" class="profile-pic" id="randomProfilePic">
+                <div class="profile-pic-nav">
+                    <button class="profile-pic-nav-btn" id="profilePicHomeBtn"><i class="fas fa-home"></i></button>
+                    <button class="profile-pic-nav-btn" id="profilePicNextBtn"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="profile-info">
+                <div class="profile-bio">
+                    <h1>Macro Universe</h1>
+                    <p>Exploring the hidden beauty in tiny details</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section class="gallery-container">
+            <div class="gallery-grid" id="galleryGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Image Viewer -->
+    <div class="image-viewer" id="imageViewer">
+        <button class="close-viewer">&times;</button>
+        <button class="nav-button prev-button">&lsaquo;</button>
+        <div class="viewer-container">
+            <img class="viewer-image" src="" alt="Enlarged view">
+            <div class="image-caption" id="imageCaption"></div>
+        </div>
+        <button class="nav-button next-button">&rsaquo;</button>
+    </div>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav" id="footerNav">
+        <button class="footer-nav-btn" id="footerHomeBtn"><i class="fas fa-home"></i></button>
+        <button class="footer-nav-btn" id="footerPrevBtn"><i class="fas fa-arrow-left"></i></button>
+        <button class="footer-nav-btn" id="footerNextBtn"><i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <script>
+        // App State
+        const state = {
+            images: [],
+            currentImageIndex: 0,
+            likedImages: new Set(),
+            captions: [
+                "World within a dewdrop",
+                "Tiny universe revealed",
+                "Nature's intricate patterns",
+                "The beauty of small things",
+                "Hidden worlds magnified",
+                "Where details become landscapes",
+                "Microscopic marvels",
+                "The art of the unseen",
+                "Fragile moments frozen",
+                "Nature's delicate architecture",
+                "Whispers of the miniature",
+                "Small scale, infinite beauty",
+                "The poetry of tiny things",
+                "Macro's magical perspective",
+                "Details that tell stories",
+                "Up close and personal",
+                "Nature's hidden jewelry",
+                "The dance of tiny elements",
+                "Miniature masterpieces",
+                "A bug's eye view",
+                "The unseen becomes art",
+                "Tiny worlds, big impact",
+                "Delicate balance revealed",
+                "Nature's microcosmos",
+                "The beauty in the minuscule",
+                "Where small is spectacular",
+                "Texture and light magnified",
+                "The art of magnification",
+                "Tiny subjects, grand stories",
+                "Macro's visual symphony"
+            ],
+            isLoading: true,
+            randomProfilePicUrl: '',
+            profilePicLink: 'https://www.instagram.com/_x4_veil.roshan?igsh=ZjR4b2FvdTQ2M3lw'
+        };
+
+        // DOM Elements
+        const galleryGrid = document.getElementById('galleryGrid');
+        const imageViewer = document.getElementById('imageViewer');
+        const viewerImage = document.querySelector('.viewer-image');
+        const imageCaption = document.getElementById('imageCaption');
+        const closeViewer = document.querySelector('.close-viewer');
+        const prevButton = document.querySelector('.prev-button');
+        const nextButton = document.querySelector('.next-button');
+        const themeToggle = document.getElementById('themeToggle');
+        const mainHeader = document.getElementById('mainHeader');
+        const postsStat = document.getElementById('postsStat');
+        const profileLink = document.getElementById('profileLink');
+        const likeIcons = document.querySelectorAll('.like-icon');
+        const randomProfilePic = document.getElementById('randomProfilePic');
+        const profilePicHomeBtn = document.getElementById('profilePicHomeBtn');
+        const profilePicNextBtn = document.getElementById('profilePicNextBtn');
+        const footerHomeBtn = document.getElementById('footerHomeBtn');
+        const footerPrevBtn = document.getElementById('footerPrevBtn');
+        const footerNextBtn = document.getElementById('footerNextBtn');
+        const footerNav = document.getElementById('footerNav');
+
+        // Initialize the app
+        async function init() {
+            // Set profile link
+            profileLink.href = state.profilePicLink;
+            
+            // Fetch images from GitHub repository
+            await fetchGitHubImages();
+            
+            // Set random profile picture
+            setRandomProfilePic();
+            
+            // Event listeners
+            closeViewer.addEventListener('click', closeImageViewer);
+            prevButton.addEventListener('click', showPrevImage);
+            nextButton.addEventListener('click', showNextImage);
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Profile picture click
+            randomProfilePic.addEventListener('click', function(e) {
+                if (!e.target.closest('.profile-pic-nav-btn')) {
+                    window.location.href = state.profilePicLink;
+                }
+            });
+            
+            // Profile picture navigation buttons
+            profilePicHomeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                window.location.href = state.profilePicLink;
+            });
+            
+            profilePicNextBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                setRandomProfilePic();
+            });
+            
+            // Footer navigation buttons
+            footerHomeBtn.addEventListener('click', function() {
+                window.location.href = state.profilePicLink;
+            });
+            
+            footerPrevBtn.addEventListener('click', function() {
+                window.location.href = "https://rosh776.github.io/Home/";
+            });
+            
+            footerNextBtn.addEventListener('click', function() {
+                window.location.href = "https://copilot.microsoft.com/chats/geJ1KRNkVXUSrX42mPbPk";
+            });
+            
+            // Like button event listeners
+            likeIcons.forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.innerHTML = '<i class="fas fa-heart" style="color: var(--like-color)"></i>';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="far fa-heart"></i>';
+                    }, 1000);
+                });
+            });
+            
+            // Scroll handler for header and footer
+            window.addEventListener('scroll', handleScroll);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        // Set random profile picture
+        function setRandomProfilePic() {
+            if (state.images.length > 0) {
+                const randomIndex = Math.floor(Math.random() * state.images.length);
+                state.randomProfilePicUrl = state.images[randomIndex].url;
+                randomProfilePic.src = state.randomProfilePicUrl;
+            }
+        }
+
+        // Fetch images from GitHub repository
+        async function fetchGitHubImages() {
+            try {
+                const owner = 'Rosh776';
+                const repo = 'macro';
+                
+                // GitHub API endpoint
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                // Filter for image files and create thumbnail URLs
+                state.images = data
+                    .filter(item => item.type === 'file' && 
+                          /\.(jpg|jpeg|png|gif)$/i.test(item.name))
+                    .map(item => ({
+                        url: item.download_url,
+                        thumbnail: `https://images.weserv.nl/?url=${encodeURIComponent(item.download_url)}&w=300&h=300&fit=cover`,
+                        name: item.name
+                    }));
+                
+                // Update posts count
+                postsStat.querySelector('.stat-value').textContent = state.images.length;
+                
+                renderGallery();
+                state.isLoading = false;
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                // Fallback to macro images if API fails
+                state.images = Array(12).fill().map((_, i) => ({
+                    url: `https://source.unsplash.com/random/600x600/?macro,closeup,${i}`,
+                    thumbnail: `https://source.unsplash.com/random/300x300/?macro,closeup,${i}`,
+                    name: `macro-${i}.jpg`
+                }));
+                postsStat.querySelector('.stat-value').textContent = state.images.length;
+                renderGallery();
+                state.isLoading = false;
+            }
+        }
+
+        // Render gallery grid
+        function renderGallery() {
+            galleryGrid.innerHTML = '';
+            
+            state.images.forEach((image, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${image.thumbnail}" alt="${image.name}" loading="lazy">
+                    <div class="item-actions">
+                        <button class="like-btn" data-index="${index}">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="item-caption">
+                        ${getRandomCaption()}
+                    </div>
+                `;
+                
+                galleryItem.addEventListener('click', (e) => {
+                    // Don't open viewer if clicking the like button
+                    if (!e.target.closest('.like-btn')) {
+                        openImageViewer(index);
+                    }
+                });
+                
+                // Like button functionality
+                const likeBtn = galleryItem.querySelector('.like-btn');
+                likeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleLike(index, this);
+                });
+                
+                // Check if image was previously liked
+                if (state.likedImages.has(index)) {
+                    likeBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                    likeBtn.classList.add('liked');
+                }
+                
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+
+        // Toggle like on image
+        function toggleLike(index, button) {
+            if (state.likedImages.has(index)) {
+                state.likedImages.delete(index);
+                button.innerHTML = '<i class="far fa-heart"></i>';
+                button.classList.remove('liked');
+            } else {
+                state.likedImages.add(index);
+                button.innerHTML = '<i class="fas fa-heart"></i>';
+                button.classList.add('liked');
+                button.style.color = 'var(--like-color)';
+                
+                // Add heart beat animation
+                button.style.animation = 'none';
+                void button.offsetWidth; // Trigger reflow
+                button.style.animation = 'heartBeat 0.5s';
+            }
+        }
+
+        // Get random caption
+        function getRandomCaption() {
+            const randomIndex = Math.floor(Math.random() * state.captions.length);
+            return state.captions[randomIndex];
+        }
+
+        // Open image viewer
+        function openImageViewer(index) {
+            state.currentImageIndex = index;
+            viewerImage.src = state.images[index].url;
+            imageCaption.textContent = getRandomCaption();
+            imageViewer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close image viewer
+        function closeImageViewer() {
+            imageViewer.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show previous image
+        function showPrevImage() {
+            state.currentImageIndex = (state.currentImageIndex - 1 + state.images.length) % state.images.length;
+            viewerImage.src = state.images[state.currentImageIndex].url;
+            imageCaption.textContent = getRandomCaption();
+        }
+
+        // Show next image
+        function showNextImage() {
+            state.currentImageIndex = (state.currentImageIndex + 1) % state.images.length;
+            viewerImage.src = state.images[state.currentImageIndex].url;
+            imageCaption.textContent = getRandomCaption();
+        }
+
+        // Toggle dark/light theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                themeToggle.style.background = 'linear-gradient(45deg, #1a1a2e, #252547)';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                themeToggle.style.background = 'linear-gradient(45deg, #8e44ad, #3498db, #2ecc71, #f1c40f)';
+                themeToggle.style.animation = 'float 6s ease-in-out infinite, gradientBG 8s ease infinite';
+            }
+        }
+
+        // Handle scroll to hide/show header and footer
+        let lastScrollPosition = 0;
+        function handleScroll() {
+            const currentScrollPosition = window.pageYOffset;
+            
+            // Header behavior
+            if (currentScrollPosition > lastScrollPosition && currentScrollPosition > 100) {
+                mainHeader.classList.add('hidden');
+            } else {
+                mainHeader.classList.remove('hidden');
+            }
+            
+            // Footer behavior - show only when at bottom of page
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = document.documentElement.clientHeight;
+            const scrollBottom = scrollHeight - (currentScrollPosition + clientHeight);
+            
+            if (scrollBottom < 50) { // Show when 50px from bottom
+                footerNav.classList.add('visible');
+            } else {
+                footerNav.classList.remove('visible');
+            }
+            
+            lastScrollPosition = currentScrollPosition;
+        }
+
+        // Keyboard navigation
+        function handleKeyDown(e) {
+            if (imageViewer.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeImageViewer();
+                } else if (e.key === 'ArrowLeft') {
+                    showPrevImage();
+                } else if (e.key === 'ArrowRight') {
+                    showNextImage();
+                }
+            }
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
